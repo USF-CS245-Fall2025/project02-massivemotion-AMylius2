@@ -1,8 +1,11 @@
 public interface List<T> {
-
-    public void add (int index, T element);
-    public boolean add (T element);
-    public T get (int index);
-    public T remove (int index);
-    public int size ();
+    int size = 0;
+    public void decSize();
+    public boolean add(T data);
+    public void add(T data, int index);
+    public T remove(int index);
+    public T get(int index);
+    public int size();
+    public void printList(); //used for debugging
+    public ListIterator<T> iterator();
 }
