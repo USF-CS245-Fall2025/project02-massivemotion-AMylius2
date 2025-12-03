@@ -1,3 +1,12 @@
+class DoubleNode<T>{
+    T data;
+    DoubleNode<T> next;
+    DoubleNode<T> previous;
+    DoubleNode(T d) {//constructor which assigns data value
+        data = d;
+    }
+}
+
 public class DoublyLinkedList<T> implements List<T> {
     private int size;
     DoubleNode<T> head;
@@ -38,7 +47,7 @@ public class DoublyLinkedList<T> implements List<T> {
      * @param data - value of item to be added
      * @param index - index of insertion
      */
-    public void add(T data, int index) {
+    public void add(T data, int index) throws IndexOutOfBoundsException{
         if (index<0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
@@ -69,7 +78,7 @@ public class DoublyLinkedList<T> implements List<T> {
      * @param index - index of removal
      * @return - value of removed index
      */
-    public T remove(int index) {
+    public T remove(int index) throws IndexOutOfBoundsException {
         if (index<0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
@@ -103,7 +112,7 @@ public class DoublyLinkedList<T> implements List<T> {
      * @param index - index to be returned
      * @return - value of the data at the given index
      */
-    public T get(int index) {
+    public T get(int index) throws IndexOutOfBoundsException {
         if (index<0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
@@ -152,5 +161,51 @@ public class DoublyLinkedList<T> implements List<T> {
      */
     public ListIterator<T> iterator() {
         return new DoubleListIterator<T>(this, head);
+    }
+}
+
+
+class DoubleListIterator<T> extends ListIterator<T>{ // iterator class for doubly linked list
+    DoubleNode<T> head;
+    DoubleNode<T> indexNode;
+
+    DoubleListIterator(List<T> l, DoubleNode<T> h) {
+        super(l);
+        head = h;
+    }
+
+    /**
+     * iterates index node, returns its value
+     * @return - value of next node in the sequence
+     */
+    public T next() {
+        if (indexNode == null) {
+            indexNode = head;
+        } else {
+            indexNode = indexNode.next;
+        }
+        return indexNode.data;
+    }
+
+    /**
+     * returns whether there are values remaining in the list
+     */
+    public boolean hasNext() {
+        if (indexNode == null) {
+            return head != null;
+        } else return indexNode.next != null;
+    }
+
+    /**
+     * removes the current element in the list.
+     */
+    public void remove() {
+        if (indexNode.previous == null) {
+            list.remove(0);
+        } else {
+            indexNode.previous.next = indexNode.next;
+            indexNode.next.previous = indexNode.previous;
+            list.decSize();
+        }
     }
 }

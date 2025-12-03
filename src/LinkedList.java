@@ -1,3 +1,11 @@
+class LinkedNode<T> { // class that contains the code for LinkedNode objects used by the
+    T data;
+    LinkedNode<T> next;
+    LinkedNode(T d) {
+        data = d;
+    }
+}
+
 public class LinkedList<T> implements List<T>{
     int size;
     LinkedNode<T> head;
@@ -27,7 +35,7 @@ public class LinkedList<T> implements List<T>{
      * @param data - value of the data of the node to be inserted
      * @param index - index of insertion
      */
-    public void add(T data, int index) {
+    public void add(T data, int index) throws IndexOutOfBoundsException{
         if (index<0 || index > size) {//edge case: index out of bounds
             throw new IndexOutOfBoundsException();
         }
@@ -51,7 +59,7 @@ public class LinkedList<T> implements List<T>{
      * @param index - index of removal
      * @return - value of the item at the removal index
      */
-    public T remove(int index) {
+    public T remove(int index) throws IndexOutOfBoundsException {
         if (index<0 || index >= size) { //edge case: index out of bounds
             throw new IndexOutOfBoundsException();
         }
@@ -77,7 +85,7 @@ public class LinkedList<T> implements List<T>{
      * @param index
      * @return
      */
-    public T get(int index) {
+    public T get(int index) throws IndexOutOfBoundsException {
         if (index<0 || index >= size) { //edge case: index out of bounds
             throw new IndexOutOfBoundsException();
         }
@@ -133,3 +141,52 @@ public class LinkedList<T> implements List<T>{
         return new LinkedListIterator<T>(this, this.head);
     }
 }
+
+
+class LinkedListIterator<T> extends ListIterator<T>{ //iterator class for linked list
+    LinkedNode<T> head;
+    LinkedNode<T> indexNode;
+    LinkedListIterator(List<T> l, LinkedNode<T> h) {
+        super(l);
+        head = h;
+    }
+
+    /**
+     * returns the next value in the list
+     * @return - data of the next node in the list
+     */
+    public T next() {  //revise so that "current" (maybe rename to indexNode?) is the node before the one returned
+        if (indexNode == null) {
+            indexNode = new LinkedNode<T>(null);
+            indexNode.next = head;
+        } else {
+            indexNode = indexNode.next;
+        }
+        return indexNode.next.data;
+    }
+
+    /**
+     * returns whether there are more values left in the list (after the current index)
+     */
+    public boolean hasNext() {
+        if (indexNode!= null) {
+            if (indexNode.next != null) {
+                return (indexNode.next.next != null);
+            } else  return false;
+        } else { return head != null; }
+    }
+
+    /**
+     * removes the next item in the list (the item after indexNode)
+     */
+    public void remove() {
+        // edge case for first index
+        if (indexNode.next == head) {
+            list.remove(0);
+        } else {
+            indexNode.next = indexNode.next.next;
+            list.decSize();
+        }
+    }
+}
+
